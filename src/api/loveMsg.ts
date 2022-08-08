@@ -86,7 +86,7 @@ class API {
   //星座运势
   async getStar(){
     const res = await getTian<SayloveProps[]>({ url: LoveMsgURL.constellation,params:{astro:'金牛座'} })
-    return res?.[0]
+    return res
   }
   //诗词
   async getPoetry(type:string){

@@ -52,6 +52,7 @@ const weatherInfo = async () => {
     const weather = await API.getWeather(CONFIG.city_name)
     if (weather) {
       const lunarInfo = await API.getLunarDate(weather.date)
+      const star =await API.getStar()
       const moringText = await API.sayMoring() //早安
       const { festival, lunar_festival, jieqi, lmonthname } = lunarInfo
       let poetryType =''
@@ -59,11 +60,16 @@ const weatherInfo = async () => {
       const jijie = lmonthname.substring(1) + '天'
       poetryType = festivalArr.includes(lunar_festival) ? lunar_festival.replace('节', '') : jijie
       const poetryText = await API.getPoetry(poetryType)
+      const english = await API.getDayEnglish()
+      const caiHongpi = await API.getCaihongpi()
       const textData = {
         lunarInfo,
         ...weather,
         moringText,
-        poetryText
+        poetryText,
+        star,
+        english,
+        caiHongpi
       }
       const template = textCardTemplate(textData)
       console.log('weatherInfo', template)

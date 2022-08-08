@@ -146,8 +146,11 @@ interface OneWordProps {
 type TextCardTemplateProps = IWeatherResponseProps & {
   lunarInfo: ResLunarDateProps
   oneWord?: OneWordProps | null
-  moringText:string,
-  poetryText:any
+  moringText?:string,
+  poetryText?:any,
+  star:any,
+  caiHongpi:any
+  english:any
 }
 
 // goodEvening

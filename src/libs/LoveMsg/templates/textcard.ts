@@ -13,8 +13,8 @@ import dayjs from '../../../utils/dayjs'
 import { getConfig } from '../../../utils/getConfig'
 
 const CONFIG = getConfig().loveMsg
-export const createTemplate = async (data: TextCardTemplateProps)=>{
-  const {} = data
+export const createTemplate = async (data: TextCardTemplateProps) => {
+  const { } = data
 
 }
 export const textCardTemplate = (data: TextCardTemplateProps) => {
@@ -28,8 +28,11 @@ export const textCardTemplate = (data: TextCardTemplateProps) => {
     pop,
     pcpn,
     lunarInfo,
-    moringText,
-    poetryText
+    // moringText,
+    // poetryText,
+    star,
+    english,
+    caiHongpi
   } = data
 
   // 今日、恋爱天数
@@ -37,23 +40,27 @@ export const textCardTemplate = (data: TextCardTemplateProps) => {
   const dateLength = dayjs(date).diff(CONFIG.start_stamp, 'day')
 
   // 拼接内容
-  let description = `${area} | ${today} | ${week}\n `
-
+  let description = `<div class=\"gray\">${area} | ${today} | ${week}</div>`
+  description += `<div class=\"gray\">今日天气状况：${weather}    温度：${lowest} ~ ${highest}</div>`
   if (CONFIG.date_lunarInfo && lunarInfo) {
     const { festival, lunar_festival, jieqi, lubarmonth, lunarday } = lunarInfo
     // 公历节日、农历节日和二十四节气
     const festival_info = festival ? `| ${festival}` : ''
-    const lunar_festival_info = lunar_festival ? `| ${lunar_festival}` : ''
+    const lunar_festival_info = lunar_festival ? ` ${lunar_festival}` : ''
     const jieqi_info = jieqi ? `| ${jieqi}` : ''
-    
+
     description += ` ${festival_info}${lunar_festival_info} ${jieqi_info}`
   }
-  description+=`${moringText}\n`
-  description+=`${poetryText.content} | ${poetryText.source}`
-
-  description += `\n今日天气状况：
-天气：${weather}
-温度：${lowest} ~ ${highest}\n`
+  description +=`<div class=\"gray\">金牛座今日运势：</div>`
+  star.length > 0 && star.forEach((item: any, index: any) => {
+    if (index < 3) {
+      description += `${item.type}：${item.content}\n`
+    }
+  });
+  // description+=`<div class=\"normal\">${moringText}<div>`
+  // description+=`${poetryText.content} ———— ${poetryText.source}`
+  description +=`${english.content}\n${english.note}\n`
+  // description += `${caiHongpi.content}`
 
   if (weather.includes('雨')) {
     description += `降雨概率：${pop}%
@@ -61,7 +68,7 @@ export const textCardTemplate = (data: TextCardTemplateProps) => {
   }
 
   description += `
-  [ 点我有惊喜 ] ❤️ 🧡 💛 💚 💖`
+  [ 今日新闻点这里 ] ❤️ 🧡 💛 💚 💖`
 
   const title = `今天是我们相识的第 ${dateLength} 天`
 
@@ -70,8 +77,6 @@ export const textCardTemplate = (data: TextCardTemplateProps) => {
     textcard: {
       title,
       description,
-      //   url: 'https://api.lovelive.tools/api/SweetNothings',
-      //   url: 'https://v1.jinrishici.com/all.svg',
       url: `${CONFIG.card_url}`, // 60s看世界
       btntxt: `By${CONFIG.boy_name}`,
     },
