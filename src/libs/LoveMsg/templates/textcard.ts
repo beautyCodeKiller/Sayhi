@@ -13,9 +13,26 @@ import dayjs from '../../../utils/dayjs'
 import { getConfig } from '../../../utils/getConfig'
 
 const CONFIG = getConfig().loveMsg
-export const createTemplate = async (data: TextCardTemplateProps) => {
-  const { } = data
-
+export const createTemplate = (data: TextTemplateProps) => {
+  const {
+    sayMorning,
+    poetry,
+    gjmj
+  } = data
+  let description = `<div class=\"highlight\">🎈${sayMorning}</div>
+    <div class=\"gray\">🌈${poetry?.content} ——— ${poetry?.author}《${poetry?.source}》</div>
+    <div class=\"gray\">🔖${gjmj?.content} ——— ${gjmj?.source}</div>`
+  const title = '伍春婷同学早上好呀😘😘'
+  const url = 'https://www.yxgapp.com/'
+  return {
+    msgtype: 'textcard',
+    textcard: {
+      title,
+      description,
+      url,
+      btntxt: `学无止境`,
+    },
+  }
 }
 export const textCardTemplate = (data: TextCardTemplateProps) => {
   const {
@@ -28,11 +45,8 @@ export const textCardTemplate = (data: TextCardTemplateProps) => {
     pop,
     pcpn,
     lunarInfo,
-    // moringText,
-    // poetryText,
     star,
     english,
-    caiHongpi
   } = data
 
   // 今日、恋爱天数
@@ -41,7 +55,17 @@ export const textCardTemplate = (data: TextCardTemplateProps) => {
 
   // 拼接内容
   let description = `<div class=\"gray\">${area} | ${today} | ${week}</div>`
-  description += `<div class=\"gray\">今日天气状况：${weather}    温度：${lowest} ~ ${highest}</div>`
+  let emoj = ''
+  const flag = weather.includes('转') ? weather.split('转')[0] : weather
+  if (flag.includes('雨')) {
+    emoj = '🌧'
+  } else if (flag.includes('多云')) {
+    emoj = '⛅️'
+  } else if (flag.includes('晴')){
+    emoj = '🌞'
+  }
+
+    description += `今日天气状况：${emoj}${weather}    温度：🌡${lowest} ~ ${highest}\n`
   if (CONFIG.date_lunarInfo && lunarInfo) {
     const { festival, lunar_festival, jieqi, lubarmonth, lunarday } = lunarInfo
     // 公历节日、农历节日和二十四节气
@@ -49,26 +73,23 @@ export const textCardTemplate = (data: TextCardTemplateProps) => {
     const lunar_festival_info = lunar_festival ? ` ${lunar_festival}` : ''
     const jieqi_info = jieqi ? `| ${jieqi}` : ''
 
-    description += ` ${festival_info}${lunar_festival_info} ${jieqi_info}`
+    description += `节日： 📅${festival_info}${lunar_festival_info} ${jieqi_info}\n`
   }
-  description +=`<div class=\"gray\">金牛座今日运势：</div>`
+  if (weather.includes('雨')) {
+    description += `降雨概率：${pop}%  降雨量：${pcpn}mm`
+  }
+  description += `<div class=\"gray\">♉金牛座今日运势：</div>`
   star.length > 0 && star.forEach((item: any, index: any) => {
     if (index < 3) {
-      description += `${item.type}：${item.content}\n`
+      description += `🌈${item.type}：${item.content}\n`
     }
   });
-  // description+=`<div class=\"normal\">${moringText}<div>`
-  // description+=`${poetryText.content} ———— ${poetryText.source}`
-  description +=`${english.content}\n${english.note}\n`
-  // description += `${caiHongpi.content}`
+  description += `🔖${english.content}\n${english.note}\n`
 
-  if (weather.includes('雨')) {
-    description += `降雨概率：${pop}%
-降雨量：${pcpn}mm\n`
-  }
+
 
   description += `
-  [ 今日新闻点这里 ] ❤️ 🧡 💛 💚 💖`
+   今日新闻📩  ❤️ 🧡 💛 💚 💖`
 
   const title = `今天是我们相识的第 ${dateLength} 天`
 

@@ -110,14 +110,21 @@ interface ResLunarDateProps {
   lubarmonth: string
   lunarday: string
   jieqi: string,
-  lmonthname:string
+  lmonthname: string
 }
 
 // 土味情话
 interface SayloveProps {
   content: string
 }
-
+interface Poetry {
+  content: string
+  source: string,
+  author: string
+}
+interface SayMorning {
+  content: string
+}
 // 励志古言
 interface InspirationalWordProps {
   saying: string
@@ -139,6 +146,10 @@ interface OneWordProps {
   creator: string
 }
 
+interface Gjmj{
+  content:string,
+  source:string
+}
 /**
  * 模板
  */
@@ -146,17 +157,19 @@ interface OneWordProps {
 type TextCardTemplateProps = IWeatherResponseProps & {
   lunarInfo: ResLunarDateProps
   oneWord?: OneWordProps | null
-  moringText?:string,
-  poetryText?:any,
-  star:any,
-  caiHongpi:any
-  english:any
+  moringText?: string,
+  poetryText?: any,
+  star: any,
+  english: any
 }
+
 
 // goodEvening
 type TextTemplateProps = {
+  sayMorning?: SayMorning | null
+  poetry?: Poetry | null
+  gjmj?: Gjmj | null
   sayLove: SayloveProps | null
-  caiHongpi: SayloveProps | null
   oneWord: OneWordProps | null
   songLyrics: IVerseProps | null
   oneMagazines: OneMagazines | null

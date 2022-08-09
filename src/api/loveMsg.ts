@@ -8,23 +8,18 @@ enum LoveMsgURL {
   // 天气接口：默认获取最近7天的数据
   weather = 'http://api.tianapi.com/tianqi/index',
   // 早安心语
-  sayMoring = 'http://api.tianapi.com/zaoan/index',
+  sayMorning = 'http://api.tianapi.com/zaoan/index',
   // 每日一句美好英语
   dayEnglish = 'http://api.tianapi.com/everyday/index',
-  // 韩寒主编的ONE一个杂志，本接口返回每日一句
-  oneMagazines = 'http://api.tianapi.com/one/index',
-  // 网易云热评
-  netEaseCloud = 'http://api.tianapi.com/hotreview/index',
   // 获取农历信息
   lunarDate = 'http://api.tianapi.com/lunar/index',
-  // 彩虹屁
-  caihongpi = 'http://api.tianapi.com/caihongpi/index',
-  // 一言
-  oneWord = 'https://v1.hitokoto.cn/?encode=json',
   //星座
-  constellation ="http://api.tianapi.com/star/index",
+  constellation = "http://api.tianapi.com/star/index",
   //诗词
-  poetry = "http://api.tianapi.com/flmj/index"
+  // poetry = "http://api.tianapi.com/flmj/index"
+  poetry = "http://api.tianapi.com/verse/index",
+  //古籍名句
+  gjmj = "http://api.tianapi.com/gjmj/index"
 }
 
 class API {
@@ -47,9 +42,12 @@ class API {
     return res?.[0]
   }
   //早安心语
-  async sayMoring(){
-    const res = await getTian({ url: LoveMsgURL.sayMoring})
+  async sayMorning() {
+    let res = await getTian({ url: LoveMsgURL.sayMorning })
     console.log(res)
+    if (res?.[0].content.length > 50) {
+      res = await getTian({ url: LoveMsgURL.sayMorning })
+    }
     return res?.[0].content
   }
 
@@ -60,49 +58,25 @@ class API {
     return res?.[0]
   }
 
-  // one一个杂志
-  async getOneMagazines() {
-    const res = await getTian<OneMagazines[]>({ url: LoveMsgURL.oneMagazines })
-    return res?.[0]
-  }
-
-  // 网易云热评
-  async getNetEaseCloud() {
-    const res = await getTian<NetEaseCloudProps[]>({ url: LoveMsgURL.netEaseCloud })
-    return res?.[0]
-  }
-
   // 获取农历信息
   async getLunarDate(date: string) {
     const res = await getTian<ResLunarDateProps[]>({ url: LoveMsgURL.lunarDate, params: { date } })
     return res?.[0]
   }
 
-  // 彩虹屁
-  async getCaihongpi() {
-    const res = await getTian<SayloveProps[]>({ url: LoveMsgURL.caihongpi })
-    return res?.[0]
-  }
   //星座运势
-  async getStar(){
-    const res = await getTian<SayloveProps[]>({ url: LoveMsgURL.constellation,params:{astro:'金牛座'} })
+  async getStar() {
+    const res = await getTian<SayloveProps[]>({ url: LoveMsgURL.constellation, params: { astro: '金牛座' } })
     return res
   }
   //诗词
-  async getPoetry(type:string){
-    const res = await getTian<SayloveProps[]>({ url: LoveMsgURL.poetry,params:{type,num:1} })
-    console.log(res)
+  async getPoetry() {
+    const res = await getTian({ url: LoveMsgURL.poetry })
     return res?.[0]
   }
-  // 一言
-  async getOneWord(): Promise<OneWordProps | null> {
-    try {
-      const response = await axios(LoveMsgURL.oneWord, { timeout: 30000 })
-      return response.data
-    } catch (error) {
-      console.log(error)
-      return null
-    }
+  async getGjmj(){
+    const res = await getTian({ url: LoveMsgURL.gjmj })
+    return res?.[0]
   }
 }
 
