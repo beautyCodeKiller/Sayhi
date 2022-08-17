@@ -48,18 +48,11 @@ const weatherInfo = async () => {
     const weather = await API.getWeather(CONFIG.city_name)
     if (weather) {
       const lunarInfo = await API.getLunarDate(weather.date)
-      const star =await API.getStar()
-      const morningText = await API.sayMorning() //早安
-      const { festival, lunar_festival, jieqi, lmonthname } = lunarInfo
-      let poetryType =''
-      const festivalArr = ['春节', '元宵', '端午', '七夕', '中秋', '重阳']
-      const jijie = lmonthname.substring(1) + '天'
-      poetryType = festivalArr.includes(lunar_festival) ? lunar_festival.replace('节', '') : jijie
+      const star =await API.getStar() //早安
       const english = await API.getDayEnglish()
       const textData = {
         lunarInfo,
         ...weather,
-        morningText,
         star,
         english,
       }
